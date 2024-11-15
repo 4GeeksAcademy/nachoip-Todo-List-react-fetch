@@ -17,8 +17,32 @@ const Home = () => {
 	}
 
 	const deleteTask = (indexToDelete) => {
-		const filteredList = todoList.filter((_, index) => index !== indexToDelete);
+
+
+		let filteredList = todoList.filter((_, index) => index.id !== indexToDelete);
 		setTodoList(filteredList);
+
+		console.log(indexToDelete);
+
+		fetch(`https://playground.4geeks.com/todo/todos/${indexToDelete}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			}
+		})
+
+			.then((response) => {
+				console.log(response)
+				getTodos()
+			})
+			
+			.catch((error) => { return error })
+
+
+
+
+
+
 	}
 
 	const getTodos = () => {
@@ -65,31 +89,12 @@ const Home = () => {
 
 	}
 
-	const deleteTodo = (todoId) => {
-		fetch('https://playground.4geeks.com/todo/todos/${todoId}', {
-		method: "DELETE",
-		headers: {
-			"Content-Type": "application/json",
-		}
-		})
-
-			.then((response) => {
-			console.log(response)
-			return response.json()
-			})
-			.then((data) => {
-			console.log(data);
-			getTodos();
-
-			})
-			.catch((error) => { return error })
-
-}
 
 
 
-	
-useEffect(() => { getTodos(); }, []);
+
+
+	useEffect(() => { getTodos(); }, []);
 
 
 
@@ -113,9 +118,9 @@ useEffect(() => { getTodos(); }, []);
 			<ul className="list-group mt-3">
 				{todoList.map((task, index) => (
 					<li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-					{task.label}
-					<button className="btn-close" onClick={() => deleteTask(index)}></button>
-				</li>
+						{task.label}
+						<button className="btn-close" onClick={() => deleteTask(task.id)}></button>
+					</li>
 				))}
 			</ul>
 
